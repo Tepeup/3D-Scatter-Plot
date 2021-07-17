@@ -17,6 +17,14 @@ export default function Graph(props) {
             marker: { color: "darkblue", size: 2, opacity: 0.4 },
           },
           {
+            x: props.nonRegionData.map((object) => Number(object.CL1)),
+            y: props.nonRegionData.map((object) => Number(object.CL2)),
+            z: props.nonRegionData.map((object) => Number(object.CL3)),
+            type: "scatter3d",
+            mode: "markers",
+            marker: { color: "green", size: 2, opacity: 0.4 },
+          },
+          {
             x: props.data.map((object) => object.x),
             y: props.data.map((object) => object.y),
             z: props.data.map((object) => object.z),

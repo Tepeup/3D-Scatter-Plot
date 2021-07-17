@@ -11,8 +11,13 @@ import region378Data from "../../assets/Region378.csv";
 import region500Data from "../../assets/Region500.csv";
 
 import Graph from "../Graph/Graph";
+import Histogram from "../Histogram/Histogram";
+import Table from "../Table/Table";
+
+import RangeSlider from "../Slider/Slider";
 
 export default function Dashboard() {
+  // Hooks
   const [verRegions, setVerRegions] = useState([]);
   const [activeVerRegion, setActiveVerRegion] = useState({
     region: null,
@@ -20,7 +25,14 @@ export default function Dashboard() {
   });
   const [rawData, setRawData] = useState([]);
   const [regionData, setRegionData] = useState([]);
+  const [nonRegionData, setNonRegionData] = useState([]);
 
+  const [originalData, setOriginalData] = useState([]);
+  const [ungatedRegionData, setUngatedRegionData] = useState([]);
+  const [filteredOriginalData, setFilteredOriginalData] = useState([]);
+
+  const [rssRange, setRssRange] = useState([7000, 17000]);
+  // Get VER Region map data
   useEffect(() => {
     let csvFilePath = [
       region102Data,
@@ -53,53 +65,164 @@ export default function Dashboard() {
     });
   }, []);
 
-  const handleOnDrop = (data) => {
-    console.log(activeVerRegion.region);
-    const filteredData = data
-      .filter((object) => {
-        return (
-          // (object.data["Region ID"] === activeVerRegion.region) &
-          (Number(object.data["RSS"]) > 7000) &
-          (Number(object.data["RSS"]) < 17000)
-        );
-      })
-      .map((object) => object.data);
+  //Slider Functions
+  const handleSliderChange = (event, newValue) => {
+    setRssRange(newValue);
 
-    setRawData(filteredData);
-  };
-  const handleOnError = (err, file, inputElem, reason) => {
-    console.error(err);
-  };
-
-  const handleOnRemoveFile = (data) => {
-    setRawData([]);
-    setActiveVerRegion({
-      region: null,
-      array: [],
+    const filteredRawData = rawData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > newValue[0]) &
+        (Number(object["RSS"]) < newValue[1])
+      );
     });
-  };
+    setRegionData(filteredRawData);
 
-  const mfiToRegion = (value) => {
-    const valueNum = Number(value);
-    return (Math.log10(valueNum + 1) / Math.log10(32767)) * 511;
-  };
+    const filteredOriginalData = originalData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > newValue[0]) &
+        (Number(object["RSS"]) < newValue[1])
+      );
+    });
 
-  const selectVerRegion = (item) => {
-    setActiveVerRegion(item);
-    const regionData = rawData
-      .filter((object) => {
-        return object["Region ID"] === item.region;
-      })
+    setFilteredOriginalData(filteredOriginalData);
+    // Will be used for Non Ver Data
+    // setNonRegionData(
+    //   filteredRawData.filter((object) => {
+    //     return object["Region ID"] === "0";
+    //   })
+    // );
+  };
+  const handleLowerInputChange = (event) => {
+    const copy = rssRange.slice();
+    copy[0] = Number(event.target.value);
+
+    if (copy[0] >= copy[1] - 499) {
+      copy[0] = 0;
+    }
+    setRssRange(copy);
+
+    const filteredRawData = rawData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > copy[0]) &
+        (Number(object["RSS"]) < copy[1])
+      );
+    });
+    setRegionData(filteredRawData);
+
+    const filteredOriginalData = originalData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > copy[0]) &
+        (Number(object["RSS"]) < copy[1])
+      );
+    });
+
+    setFilteredOriginalData(filteredOriginalData);
+  };
+  const handleUpperInputChange = (event) => {
+    let numberEvent = Number(event.target.value);
+    if (numberEvent > 40000) {
+      numberEvent = 40000;
+    }
+    const copy = rssRange.slice();
+
+    copy[1] = Number(numberEvent);
+
+    if (copy[1] <= copy[0]) {
+      setRssRange(rssRange);
+    }
+
+    setRssRange(copy);
+
+    const filteredRawData = rawData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > copy[0]) &
+        (Number(object["RSS"]) < copy[1])
+      );
+    });
+    setRegionData(filteredRawData);
+
+    const filteredOriginalData = originalData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > copy[0]) &
+        (Number(object["RSS"]) < copy[1])
+      );
+    });
+
+    setFilteredOriginalData(filteredOriginalData);
+  };
+  // File Functions
+  const handleOnDrop = (data) => {
+    const ogData = data.map((obj) => obj.data);
+    const convertedData = data
+      .map((object) => object.data)
       .map((obj) => {
         return {
           ...obj,
-          oldCL1: obj["CL1"],
           CL1: mfiToRegion(obj["CL1"]),
           CL2: mfiToRegion(obj["CL2"]),
           CL3: mfiToRegion(obj["CL3"]),
         };
       });
-    setRegionData(regionData);
+    setOriginalData(ogData);
+    setRawData(convertedData);
+  };
+  const handleOnError = (err, file, inputElem, reason) => {
+    console.error(err);
+  };
+  const handleOnRemoveFile = (data) => {
+    setActiveVerRegion({
+      region: null,
+      array: [],
+    });
+    setRawData([]);
+    setRegionData([]);
+    setNonRegionData([]);
+    setOriginalData([]);
+    setUngatedRegionData([]);
+    setFilteredOriginalData([]);
+    setRssRange([7000, 17000]);
+  };
+  //Button Functions
+  const selectVerRegion = (item) => {
+    setActiveVerRegion(item);
+    const filteredRawData = rawData.filter((object) => {
+      return (
+        (object["Region ID"] === item.region) &
+        (Number(object["RSS"]) > rssRange[0]) &
+        (Number(object["RSS"]) < rssRange[1])
+      );
+    });
+    setRegionData(filteredRawData);
+    setUngatedRegionData(
+      originalData.filter((object) => {
+        return (
+          (object["Region ID"] === item.region) &
+          (Number(object["RSS"]) > rssRange[0]) &
+          (Number(object["RSS"]) < rssRange[1])
+        );
+      })
+    );
+    setFilteredOriginalData(
+      originalData.filter((object) => {
+        return (
+          (object["Region ID"] === item.region) &
+          (Number(object["RSS"]) > rssRange[0]) &
+          (Number(object["RSS"]) < rssRange[1])
+        );
+      })
+    );
+
+    setNonRegionData(
+      filteredRawData.filter((object) => {
+        return object["Region ID"] === "0";
+      })
+    );
   };
 
   return (
@@ -117,7 +240,7 @@ export default function Dashboard() {
             Drop VER data here or Click to upload
           </span>
         </CSVReader>
-        {console.log(rawData.data)}
+
         {/* Region Buttons */}
         <div className="buttons">
           {rawData.length > 0 &&
@@ -137,15 +260,97 @@ export default function Dashboard() {
         </div>
       </section>
       {/* 3D Graph */}
-      {(activeVerRegion.array.length > 2) & (regionData.length > 2) ? (
-        <Graph
-          data={activeVerRegion.array}
-          raw={regionData}
-          title={activeVerRegion.region}
-        />
-      ) : (
-        <div></div>
+      <div>
+        {(activeVerRegion.array.length > 2) & (regionData.length > 2) ? (
+          <section>
+            <Graph
+              data={activeVerRegion.array}
+              nonRegionData={nonRegionData}
+              raw={regionData}
+              title={activeVerRegion.region}
+            />
+            <Histogram raw={regionData} />
+          </section>
+        ) : activeVerRegion.length > 10 ? (
+          <div></div>
+        ) : originalData.length > 10 ? (
+          <h4>No data Points, select region or change RSS range</h4>
+        ) : (
+          <div></div>
+        )}
+        {originalData.length > 10 && (
+          <RangeSlider
+            value={rssRange}
+            handleChange={handleSliderChange}
+            sliderRange={rssRange}
+            handleLowerInputChange={handleLowerInputChange}
+            handleUpperInputChange={handleUpperInputChange}
+          />
+        )}
+      </div>
+      {originalData.length > 10 && (
+        <section className="selection">
+          <h1>Statistics</h1>
+
+          {filteredOriginalData.length > 10 ? (
+            <Table
+              CL1median={calcMedian(filteredOriginalData, "CL1")}
+              CL2median={calcMedian(filteredOriginalData, "CL2")}
+              CL3median={calcMedian(filteredOriginalData, "CL3")}
+              CL1cv={calcCoefficientVariation(filteredOriginalData, "CL1")}
+              CL2cv={calcCoefficientVariation(filteredOriginalData, "CL2")}
+              CL3cv={calcCoefficientVariation(filteredOriginalData, "CL3")}
+            />
+          ) : ungatedRegionData.length > 10 ? (
+            <Table
+              CL1median={calcMedian(ungatedRegionData, "CL1")}
+              CL2median={calcMedian(ungatedRegionData, "CL2")}
+              CL3median={calcMedian(ungatedRegionData, "CL3")}
+              CL1cv={calcCoefficientVariation(ungatedRegionData, "CL1")}
+              CL2cv={calcCoefficientVariation(ungatedRegionData, "CL2")}
+              CL3cv={calcCoefficientVariation(ungatedRegionData, "CL3")}
+            />
+          ) : (
+            <div></div>
+          )}
+        </section>
       )}
     </div>
   );
 }
+
+const calcMedian = (numbers, parameter) => {
+  const sorted = numbers
+    .slice()
+    .map((obj) => Number(obj[parameter]))
+    .sort((a, b) => a - b);
+
+  const middle = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return ((sorted[middle - 1] + sorted[middle]) / 2).toFixed(2);
+  }
+  return sorted[middle].toFixed(2);
+};
+
+const calcCoefficientVariation = (numbers, parameter) => {
+  const data = numbers
+    .slice()
+    .map((obj) => Number(obj[parameter]))
+    .sort((a, b) => a - b);
+  const trimValue = Math.round(data.length * 0.05);
+  const firstTrim = data.slice(trimValue);
+  const values = firstTrim.slice(0, firstTrim.length - trimValue);
+  const arrayLength = values.length;
+  const mean = values.reduce((a, b) => a + b, 0) / arrayLength;
+  const standarDeviation = Math.sqrt(
+    values.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) /
+      arrayLength
+  );
+  const coefficientVariation = ((standarDeviation / mean) * 100).toFixed(2);
+  return coefficientVariation;
+};
+
+const mfiToRegion = (value) => {
+  const valueNum = Number(value);
+  return (Math.log10(valueNum + 1) / Math.log10(32767)) * 511;
+};
