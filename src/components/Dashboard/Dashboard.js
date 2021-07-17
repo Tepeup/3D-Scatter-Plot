@@ -156,6 +156,29 @@ export default function Dashboard() {
 
     setFilteredOriginalData(filteredOriginalData);
   };
+
+  const resetRSS = () => {
+    setRssRange([7000, 17000]);
+
+    const filteredRawData = rawData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > 7000) &
+        (Number(object["RSS"]) < 17000)
+      );
+    });
+    setRegionData(filteredRawData);
+
+    const filteredOriginalData = originalData.filter((object) => {
+      return (
+        (object["Region ID"] === activeVerRegion.region) &
+        (Number(object["RSS"]) > 7000) &
+        (Number(object["RSS"]) < 17000)
+      );
+    });
+
+    setFilteredOriginalData(filteredOriginalData);
+  };
   // File Functions
   const handleOnDrop = (data) => {
     const ogData = data.map((obj) => obj.data);
@@ -274,7 +297,7 @@ export default function Dashboard() {
         ) : activeVerRegion.length > 10 ? (
           <div></div>
         ) : originalData.length > 10 ? (
-          <h4>No data Points, select region or change RSS range</h4>
+          <h3>No data Points, select new region or change RSS range</h3>
         ) : (
           <div></div>
         )}
@@ -285,6 +308,7 @@ export default function Dashboard() {
             sliderRange={rssRange}
             handleLowerInputChange={handleLowerInputChange}
             handleUpperInputChange={handleUpperInputChange}
+            resetRSS={resetRSS}
           />
         )}
       </div>

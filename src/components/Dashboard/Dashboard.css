@@ -35,8 +35,6 @@
 .selection:last-child{
     width: 300px;
 }
-h4{color:hsl(348, 88%, 39%);
-padding: 1rem;}
 
 .instructions{
     font-size: 1rem;
@@ -96,9 +94,20 @@ button.active{
     font-weight: bold;
     flex-direction: column;
     display: flex;
+    align-items: center;
 }
 .inputs{
     display: flex;
     justify-content: space-around;
+    margin: 1em 0
 
 }
+
+.reset{
+    margin:auto
+}
+
+h3,h4{
+    color:black;
+    padding: 3rem;}
+    

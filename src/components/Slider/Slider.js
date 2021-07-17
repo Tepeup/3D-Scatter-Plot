@@ -85,6 +85,9 @@ export default function RangeSlider(props) {
           />
         </div>
       </div>
+      <button onClick={props.resetRSS} className="reset">
+        Reset RSS
+      </button>
     </div>
   );
 }

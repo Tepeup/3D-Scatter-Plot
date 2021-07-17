@@ -15,6 +15,7 @@ export default function Graph(props) {
             type: "scatter3d",
             mode: "markers",
             marker: { color: "darkblue", size: 2, opacity: 0.4 },
+            name: "Output Data",
           },
           {
             x: props.nonRegionData.map((object) => Number(object.CL1)),
@@ -31,14 +32,15 @@ export default function Graph(props) {
             type: "scatter3d",
             mode: "markers",
             marker: { color: "red", size: 3, opacity: 0.04 },
+            name: "Region Map",
           },
         ]}
         layout={{
           title: {
             text: "REGION " + props.title,
             font: {
-              size: 36,
-              color: "#ba0c2f",
+              size: 40,
+              fontWeight: "600",
             },
           },
           margin: {
@@ -51,11 +53,12 @@ export default function Graph(props) {
           width: 500,
           height: 500,
           scene: {
-            xaxis: { title: "CL1", tickwidth: 2 },
-            yaxis: { title: "CL2", tickwidth: 2 },
+            xaxis: { title: "CL1", tickwidth: 2, gridwidth: 2 },
+            yaxis: { title: "CL2", tickwidth: 2, gridwidth: 2 },
             zaxis: {
               title: "CL3",
               tickwidth: 2,
+              gridwidth: 2,
             },
           },
           plot_bgcolor: "hsl(0, 0%, 100%)",
