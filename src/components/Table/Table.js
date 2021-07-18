@@ -3,36 +3,28 @@ import "./Table.css";
 
 export default function Table(props) {
   return (
-    <table>
+    <table id="statistics">
       <thead>
         <tr>
           <th>Type</th>
-          <th>Value</th>
+          <th>Median</th>
+          <th>CV</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>CL1 Median</td>
+          <td>CL1</td>
           <td>{props.CL1median}</td>
-        </tr>
-        <tr>
-          <td>CL2 Median</td>
-          <td>{props.CL2median}</td>
-        </tr>
-        <tr>
-          <td>CL3 Median</td>
-          <td>{props.CL3median}</td>
-        </tr>
-        <tr>
-          <td>CL1 CV</td>
           <td>{props.CL1cv}%</td>
         </tr>
         <tr>
-          <td>CL2 CV</td>
+          <td>CL2</td>
+          <td>{props.CL2median}</td>
           <td>{props.CL2cv}%</td>
         </tr>
         <tr>
-          <td>CL3 CV</td>
+          <td>CL3</td>
+          <td>{props.CL3median}</td>
           <td>{props.CL3cv}%</td>
         </tr>
       </tbody>

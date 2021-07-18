@@ -34,6 +34,7 @@
 }
 .selection:last-child{
     width: 300px;
+   
 }
 
 .instructions{
@@ -110,4 +111,7 @@ button.active{
 h3,h4{
     color:black;
     padding: 3rem;}
-    
+
+#statistics{
+    margin-bottom: 1rem;
+}

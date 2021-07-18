@@ -60,7 +60,7 @@ export default function RangeSlider(props) {
             margin="dense"
             onChange={props.handleLowerInputChange}
             inputProps={{
-              step: 100,
+              step: 50,
               min: 0,
               max: 40000,
               type: "number",
@@ -76,7 +76,7 @@ export default function RangeSlider(props) {
             margin="dense"
             onChange={props.handleUpperInputChange}
             inputProps={{
-              step: 100,
+              step: 50,
               min: 0,
               max: 40000,
               type: "number",

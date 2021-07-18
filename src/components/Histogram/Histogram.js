@@ -11,13 +11,12 @@ export default function Histogram(props) {
         data={[
           {
             x: props.raw.map((object) => Number(object.RSS)),
-            xbins: { size: 25 },
+            xbins: { size: 50 },
             type: "histogram",
             marker: { color: "#2200cc" },
           },
         ]}
         layout={{
-          xbins: { size: 1 },
           xaxis: {
             range: [0, 40000],
           },
