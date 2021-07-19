@@ -61,8 +61,8 @@ export default function Graph(props) {
               gridwidth: 2,
             },
           },
-          plot_bgcolor: "hsl(0, 0%, 100%)",
-          paper_bgcolor: "hsl(0, 0%, 98%)",
+          plot_bgcolor: "hsl(0, 0%, 99%)",
+          paper_bgcolor: "hsl(0, 0%, 99%)",
           showlegend: false,
         }}
       />

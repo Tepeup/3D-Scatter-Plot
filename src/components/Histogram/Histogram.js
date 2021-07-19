@@ -21,16 +21,16 @@ export default function Histogram(props) {
             range: [0, 40000],
           },
           margin: {
-            l: 16,
-            r: 16,
+            l: 20,
+            r: 20,
             b: 20,
             t: 20,
             pad: 0,
           },
           width: 500,
           height: 100,
-          plot_bgcolor: "hsl(0, 0%, 100%)",
-          paper_bgcolor: "hsl(0, 0%, 98%)",
+          plot_bgcolor: "hsl(0, 0%, 99%)",
+          paper_bgcolor: "hsl(0, 0%, 99%)",
           showlegend: false,
         }}
       />
