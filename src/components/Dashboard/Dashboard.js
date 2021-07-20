@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [filteredOriginalData, setFilteredOriginalData] = useState([]);
 
   const [rssRange, setRssRange] = useState([7000, 17000]);
+  const [fileName, setFileName] = useState("");
   // Get VER Region map data
   useEffect(() => {
     let csvFilePath = [
@@ -180,7 +181,7 @@ export default function Dashboard() {
     setFilteredOriginalData(filteredOriginalData);
   };
   // File Functions
-  const handleOnDrop = (data) => {
+  const handleOnDrop = (data, meta) => {
     const ogData = data.map((obj) => obj.data);
     const convertedData = data
       .map((object) => object.data)
@@ -194,6 +195,7 @@ export default function Dashboard() {
       });
     setOriginalData(ogData);
     setRawData(convertedData);
+    setFileName(meta.name.replace(".csv", ""));
   };
   const handleOnError = (err, file, inputElem, reason) => {
     console.error(err);
@@ -210,6 +212,7 @@ export default function Dashboard() {
     setUngatedRegionData([]);
     setFilteredOriginalData([]);
     setRssRange([7000, 17000]);
+    setFileName("");
   };
   //Button Functions
   const selectVerRegion = (item) => {
@@ -320,21 +323,43 @@ export default function Dashboard() {
 
           {filteredOriginalData.length > 10 ? (
             <Table
+              region={activeVerRegion.region}
+              file={fileName}
               CL1median={calcMedian(filteredOriginalData, "CL1")}
               CL2median={calcMedian(filteredOriginalData, "CL2")}
               CL3median={calcMedian(filteredOriginalData, "CL3")}
-              CL1cv={calcCoefficientVariation(filteredOriginalData, "CL1")}
-              CL2cv={calcCoefficientVariation(filteredOriginalData, "CL2")}
-              CL3cv={calcCoefficientVariation(filteredOriginalData, "CL3")}
+              CL1cv={calcCoefficientVariation(
+                filteredOriginalData,
+                "CL1",
+                0.05
+              )}
+              CL2cv={calcCoefficientVariation(
+                filteredOriginalData,
+                "CL2",
+                0.05
+              )}
+              CL3cv={calcCoefficientVariation(
+                filteredOriginalData,
+                "CL3",
+                0.05
+              )}
+              uCL1cv={calcCoefficientVariation(filteredOriginalData, "CL1", 0)}
+              uCL2cv={calcCoefficientVariation(filteredOriginalData, "CL2", 0)}
+              uCL3cv={calcCoefficientVariation(filteredOriginalData, "CL3", 0)}
             />
           ) : ungatedRegionData.length > 10 ? (
             <Table
+              region={activeVerRegion.region}
+              file={fileName}
               CL1median={calcMedian(ungatedRegionData, "CL1")}
               CL2median={calcMedian(ungatedRegionData, "CL2")}
               CL3median={calcMedian(ungatedRegionData, "CL3")}
-              CL1cv={calcCoefficientVariation(ungatedRegionData, "CL1")}
-              CL2cv={calcCoefficientVariation(ungatedRegionData, "CL2")}
-              CL3cv={calcCoefficientVariation(ungatedRegionData, "CL3")}
+              CL1cv={calcCoefficientVariation(ungatedRegionData, "CL1", 0.05)}
+              CL2cv={calcCoefficientVariation(ungatedRegionData, "CL2", 0.05)}
+              CL3cv={calcCoefficientVariation(ungatedRegionData, "CL3", 0.05)}
+              uCL1cv={calcCoefficientVariation(ungatedRegionData, "CL1", 0)}
+              uCL2cv={calcCoefficientVariation(ungatedRegionData, "CL2", 0)}
+              uCL3cv={calcCoefficientVariation(ungatedRegionData, "CL3", 0)}
             />
           ) : (
             <div></div>
@@ -365,18 +390,18 @@ const calcMedian = (numbers, parameter) => {
   return sorted[middle].toFixed(2);
 };
 
-const calcCoefficientVariation = (numbers, parameter) => {
+const calcCoefficientVariation = (numbers, parameter, trim) => {
   const data = numbers
     .slice()
     .map((obj) => Number(obj[parameter]))
     .sort((a, b) => a - b);
-  const trimValue = Math.round(data.length * 0.05);
+  const trimValue = Math.round(data.length * trim);
   const firstTrim = data.slice(trimValue);
   const values = firstTrim.slice(0, firstTrim.length - trimValue);
   const arrayLength = values.length;
   const mean = values.reduce((a, b) => a + b, 0) / arrayLength;
   const standarDeviation = Math.sqrt(
-    values.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b) /
+    values.map((x) => Math.pow(x - mean, 2)).reduce((a, b) => a + b, 0) /
       arrayLength
   );
   const coefficientVariation = ((standarDeviation / mean) * 100).toFixed(2);

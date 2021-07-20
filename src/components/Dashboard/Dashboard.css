@@ -34,7 +34,7 @@
     filter: drop-shadow(0 0 4px hsla(0, 0%, 0%, 0.05))
 }
 .selection:last-child{
-    width: 300px;
+    width:auto;
    
 }
 

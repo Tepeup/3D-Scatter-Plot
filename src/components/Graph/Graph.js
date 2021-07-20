@@ -16,6 +16,7 @@ export default function Graph(props) {
             mode: "markers",
             marker: { color: "darkblue", size: 2, opacity: 0.4 },
             name: "Output Data",
+            color: [17000, 16000],
           },
           {
             x: props.nonRegionData.map((object) => Number(object.CL1)),
@@ -35,6 +36,7 @@ export default function Graph(props) {
             name: "Region Map",
           },
         ]}
+        config={{ responsive: true }}
         layout={{
           title: {
             text: "REGION " + props.title,
