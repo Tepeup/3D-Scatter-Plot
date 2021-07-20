@@ -33,7 +33,12 @@ export default function Dashboard() {
 
   const [rssRange, setRssRange] = useState([7000, 17000]);
   const [fileName, setFileName] = useState("");
+  const [name, setName] = useState("");
   // Get VER Region map data
+  useEffect(() => {
+    setName("John");
+  }, [name]);
+
   useEffect(() => {
     let csvFilePath = [
       region102Data,
@@ -70,30 +75,7 @@ export default function Dashboard() {
   const handleSliderChange = (event, newValue) => {
     setRssRange(newValue);
 
-    const filteredRawData = rawData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > newValue[0]) &
-        (Number(object["RSS"]) < newValue[1])
-      );
-    });
-    setRegionData(filteredRawData);
-
-    const filteredOriginalData = originalData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > newValue[0]) &
-        (Number(object["RSS"]) < newValue[1])
-      );
-    });
-
-    setFilteredOriginalData(filteredOriginalData);
-    // Will be used for Non Ver Data
-    // setNonRegionData(
-    //   filteredRawData.filter((object) => {
-    //     return object["Region ID"] === "0";
-    //   })
-    // );
+    getFilteredDataThenSetState(newValue[0], newValue[1]);
   };
   const handleLowerInputChange = (event) => {
     const copy = rssRange.slice();
@@ -104,24 +86,7 @@ export default function Dashboard() {
     }
     setRssRange(copy);
 
-    const filteredRawData = rawData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > copy[0]) &
-        (Number(object["RSS"]) < copy[1])
-      );
-    });
-    setRegionData(filteredRawData);
-
-    const filteredOriginalData = originalData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > copy[0]) &
-        (Number(object["RSS"]) < copy[1])
-      );
-    });
-
-    setFilteredOriginalData(filteredOriginalData);
+    getFilteredDataThenSetState(copy[0], copy[1]);
   };
   const handleUpperInputChange = (event) => {
     let numberEvent = Number(event.target.value);
@@ -138,34 +103,22 @@ export default function Dashboard() {
 
     setRssRange(copy);
 
-    const filteredRawData = rawData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > copy[0]) &
-        (Number(object["RSS"]) < copy[1])
-      );
-    });
-    setRegionData(filteredRawData);
-
-    const filteredOriginalData = originalData.filter((object) => {
-      return (
-        (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > copy[0]) &
-        (Number(object["RSS"]) < copy[1])
-      );
-    });
-
-    setFilteredOriginalData(filteredOriginalData);
+    getFilteredDataThenSetState(copy[0], copy[1]);
   };
 
   const resetRSS = () => {
     setRssRange([7000, 17000]);
 
+    getFilteredDataThenSetState(7000, 17000);
+  };
+  // auxillary function
+
+  const getFilteredDataThenSetState = (lower, upper) => {
     const filteredRawData = rawData.filter((object) => {
       return (
         (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > 7000) &
-        (Number(object["RSS"]) < 17000)
+        (Number(object["RSS"]) > lower) &
+        (Number(object["RSS"]) < upper)
       );
     });
     setRegionData(filteredRawData);
@@ -173,13 +126,13 @@ export default function Dashboard() {
     const filteredOriginalData = originalData.filter((object) => {
       return (
         (object["Region ID"] === activeVerRegion.region) &
-        (Number(object["RSS"]) > 7000) &
-        (Number(object["RSS"]) < 17000)
+        (Number(object["RSS"]) > lower) &
+        (Number(object["RSS"]) < upper)
       );
     });
-
     setFilteredOriginalData(filteredOriginalData);
   };
+
   // File Functions
   const handleOnDrop = (data, meta) => {
     const ogData = data.map((obj) => obj.data);
