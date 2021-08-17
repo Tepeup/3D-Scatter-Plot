@@ -16,7 +16,6 @@ export default function Graph(props) {
             mode: "markers",
             marker: { color: "darkblue", size: 2, opacity: 0.4 },
             name: "Output Data",
-            color: [17000, 16000],
           },
           {
             x: props.nonRegionData.map((object) => Number(object.CL1)),
@@ -25,6 +24,7 @@ export default function Graph(props) {
             type: "scatter3d",
             mode: "markers",
             marker: { color: "green", size: 2, opacity: 0.4 },
+            name: "Non Region",
           },
           {
             x: props.data.map((object) => object.x),
@@ -52,8 +52,8 @@ export default function Graph(props) {
             t: 100,
             pad: 0,
           },
-          width: 500,
-          height: 500,
+          width: 800,
+          height: 600,
           scene: {
             xaxis: { title: "CL1", tickwidth: 2, gridwidth: 2 },
             yaxis: { title: "CL2", tickwidth: 2, gridwidth: 2 },
@@ -65,7 +65,7 @@ export default function Graph(props) {
           },
           plot_bgcolor: "hsl(0, 0%, 99%)",
           paper_bgcolor: "hsl(0, 0%, 99%)",
-          showlegend: false,
+          showlegend: true,
         }}
       />
     </div>

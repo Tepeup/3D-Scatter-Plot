@@ -27,7 +27,7 @@ export default function Histogram(props) {
             t: 20,
             pad: 0,
           },
-          width: 500,
+          width: 800,
           height: 100,
           plot_bgcolor: "hsl(0, 0%, 99%)",
           paper_bgcolor: "hsl(0, 0%, 99%)",
