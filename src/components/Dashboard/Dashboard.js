@@ -3,6 +3,11 @@ import "./Dashboard.css";
 
 import { CSVReader, readString } from "react-papaparse";
 
+import region006Data from "../../assets/Region006.csv";
+import region022Data from "../../assets/Region022.csv";
+import region071Data from "../../assets/Region071.csv";
+import region081Data from "../../assets/Region081.csv";
+import region096Data from "../../assets/Region096.csv";
 import region102Data from "../../assets/Region102.csv";
 import region153Data from "../../assets/Region153.csv";
 import region352Data from "../../assets/Region352.csv";
@@ -41,6 +46,11 @@ export default function Dashboard() {
 
   useEffect(() => {
     let csvFilePath = [
+      region006Data,
+      region022Data,
+      region071Data,
+      region081Data,
+      region096Data,
       region102Data,
       region153Data,
       region352Data,
@@ -49,7 +59,19 @@ export default function Dashboard() {
       region500Data,
     ];
     let regions = [];
-    let names = ["102", "153", "352", "374", "378", "500"];
+    let names = [
+      "6",
+      "22",
+      "71",
+      "81",
+      "96",
+      "102",
+      "153",
+      "352",
+      "374",
+      "378",
+      "500",
+    ];
 
     csvFilePath.forEach((element, index) => {
       fetch(element)
@@ -178,6 +200,7 @@ export default function Dashboard() {
       );
     });
     setRegionData(filteredRawData);
+    console.log(filteredRawData);
     setUngatedRegionData(
       originalData.filter((object) => {
         return (
@@ -208,17 +231,19 @@ export default function Dashboard() {
     <div className="dashboard">
       <nav className="navbar">Luminex IFX VER region visualizer</nav>
       <section className="selection">
-        <CSVReader
-          onDrop={handleOnDrop}
-          onError={handleOnError}
-          config={{ header: true }}
-          addRemoveButton
-          onRemoveFile={handleOnRemoveFile}
-        >
-          <span className="instructions">
-            Drop VER data here or Click to upload
-          </span>
-        </CSVReader>
+        <div class="holder">
+          <CSVReader
+            onDrop={handleOnDrop}
+            onError={handleOnError}
+            config={{ header: true, encoding: "UTF-8" }}
+            addRemoveButton
+            onRemoveFile={handleOnRemoveFile}
+          >
+            <span className="instructions">
+              Drop VER data here or Click to upload
+            </span>
+          </CSVReader>
+        </div>
 
         {/* Region Buttons */}
         <div className="buttons">
@@ -234,7 +259,7 @@ export default function Dashboard() {
                       activeVerRegion.region === item.region ? "active" : ""
                     }
                   >
-                    Region {item.region}
+                    {item.region}
                   </button>
                 );
               })}
@@ -242,7 +267,7 @@ export default function Dashboard() {
       </section>
       {/* 3D Graph */}
       <div>
-        {(activeVerRegion.array.length > 2) & (regionData.length > 2) ? (
+        {regionData.length > 2 ? (
           <section>
             <Graph
               data={activeVerRegion.array}
@@ -255,7 +280,7 @@ export default function Dashboard() {
         ) : activeVerRegion.length > 10 ? (
           <div></div>
         ) : originalData.length > 10 ? (
-          <h3>No data Points, select new region or change RSS range</h3>
+          <h3>No data Points, select new region or change RSS range </h3>
         ) : (
           <div></div>
         )}
@@ -322,7 +347,7 @@ export default function Dashboard() {
               download_table_as_csv("statistics");
             }}
           >
-            Download as CSV
+            Download
           </button>
         </section>
       )}
