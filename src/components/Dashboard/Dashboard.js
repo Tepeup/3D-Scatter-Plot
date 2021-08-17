@@ -106,10 +106,10 @@ export default function Dashboard() {
     getFilteredDataThenSetState(copy[0], copy[1]);
   };
 
-  const resetRSS = () => {
-    setRssRange([7000, 17000]);
+  const resetRSS = (low, high) => {
+    setRssRange([low, high]);
 
-    getFilteredDataThenSetState(7000, 17000);
+    getFilteredDataThenSetState(low, high);
   };
   // auxillary function
 

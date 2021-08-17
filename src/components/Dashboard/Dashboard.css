@@ -92,7 +92,11 @@ button:hover{
 button.active{
     background-color: hsl(250, 100%, 40%);
 }
-
+.buttonsmag{display: flex;
+}
+.buttonsmag button{
+    margin:0 1rem
+}
 .slider{
     font-weight: bold;
     flex-direction: column;
