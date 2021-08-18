@@ -86,7 +86,7 @@ export default function Dashboard() {
           );
 
           regions.push({ region: names[index], array: arrayFromJsonNoBlanks });
-          if (regions.length === 6) {
+          if (regions.length === 11) {
             setVerRegions(regions);
           }
         });
@@ -231,7 +231,7 @@ export default function Dashboard() {
     <div className="dashboard">
       <nav className="navbar">Luminex IFX VER region visualizer</nav>
       <section className="selection">
-        <div class="holder">
+        <div className="holder">
           <CSVReader
             onDrop={handleOnDrop}
             onError={handleOnError}

@@ -24,7 +24,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 500px;
+    height: minmax(250px,auto);
     width: 210px;
     padding: 1rem;
     background-color: hsl(0, 0%, 99%);
@@ -110,14 +110,13 @@ button.active{
     flex-direction: column;
     display: flex;
     align-items: center;
-    padding: 0 16px;
-  
+    padding: 0 28px;
 
 }
 .inputs{
     display: flex;
     justify-content: space-around;
-    margin: 1em 0
+    margin: 0.5em 0 1rem 0
 
 }
 

@@ -21,8 +21,8 @@ export default function Histogram(props) {
             range: [0, 40000],
           },
           margin: {
-            l: 20,
-            r: 20,
+            l: 30,
+            r: 30,
             b: 20,
             t: 20,
             pad: 0,
