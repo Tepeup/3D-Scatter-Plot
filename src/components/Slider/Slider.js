@@ -85,7 +85,7 @@ export default function RangeSlider(props) {
           />
         </div>
       </div>
-      <div class="buttonsmag">
+      <div className="buttonsmag">
         <button onClick={() => props.resetRSS(3431, 8333)} className="reset">
           Micro
         </button>

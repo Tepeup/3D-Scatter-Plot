@@ -14,6 +14,7 @@ import region352Data from "../../assets/Region352.csv";
 import region374Data from "../../assets/Region374.csv";
 import region378Data from "../../assets/Region378.csv";
 import region500Data from "../../assets/Region500.csv";
+import dataPreview from "../../assets/Preview.csv";
 
 import Graph from "../Graph/Graph";
 import Histogram from "../Histogram/Histogram";
@@ -35,6 +36,8 @@ export default function Dashboard() {
   const [originalData, setOriginalData] = useState([]);
   const [ungatedRegionData, setUngatedRegionData] = useState([]);
   const [filteredOriginalData, setFilteredOriginalData] = useState([]);
+
+  const [preview, setPreview] = useState({});
 
   const [rssRange, setRssRange] = useState([7000, 17000]);
   const [fileName, setFileName] = useState("");
@@ -72,6 +75,27 @@ export default function Dashboard() {
       "378",
       "500",
     ];
+    fetch(dataPreview)
+      .then((rs) => {
+        return rs.text();
+      })
+      .then((text) => {
+        const jsonFromText = readString(text, { header: true });
+        const arrayFromJson = jsonFromText.data;
+        const arrayFromJsonNoBlanks = arrayFromJson.filter(
+          (obj) => obj.x !== ""
+        );
+        const previewData = arrayFromJsonNoBlanks.map((obj) => {
+          return {
+            ...obj,
+            CL1: mfiToRegion(obj["CL1"]),
+            CL2: mfiToRegion(obj["CL2"]),
+            CL3: mfiToRegion(obj["CL3"]),
+          };
+        });
+
+        setPreview({ preview: previewData, raw: arrayFromJsonNoBlanks });
+      });
 
     csvFilePath.forEach((element, index) => {
       fetch(element)
@@ -153,6 +177,12 @@ export default function Dashboard() {
       );
     });
     setFilteredOriginalData(filteredOriginalData);
+  };
+  // preview function
+  const handlePreview = () => {
+    setOriginalData(preview.raw);
+    setRawData(preview.preview);
+    setFileName("Preview Data");
   };
 
   // File Functions
@@ -244,7 +274,11 @@ export default function Dashboard() {
             </span>
           </CSVReader>
         </div>
-
+        {rawData.length < 10 ? (
+          <button className="preview" onClick={handlePreview}>
+            preview
+          </button>
+        ) : null}
         {/* Region Buttons */}
         <div className="buttons">
           {rawData.length > 0 &&
