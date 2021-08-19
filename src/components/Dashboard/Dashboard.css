@@ -38,6 +38,11 @@
    
 }
 .preview{margin-top: 1.5rem;}
+.button-title{
+    font-weight: bold;
+    margin:1rem;
+    margin-bottom: 0;
+}
 
 .instructions{
     font-size: 1rem;

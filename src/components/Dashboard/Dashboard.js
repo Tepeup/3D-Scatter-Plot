@@ -278,7 +278,9 @@ export default function Dashboard() {
           <button className="preview" onClick={handlePreview}>
             preview
           </button>
-        ) : null}
+        ) : (
+          <div className="button-title">Select Region:</div>
+        )}
         {/* Region Buttons */}
         <div className="buttons">
           {rawData.length > 0 &&
